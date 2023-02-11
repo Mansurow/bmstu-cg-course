@@ -4,7 +4,7 @@
 #include "scene/camera/cameramanager.h"
 #include "scene/model/modelmanager.h"
 #include "scene/render/rendermanager.h"
-#include "scene/scenecontainer.h"
+#include "scene/scene.h"
 
 enum class CameraParam{ YAW, PITCH, POS_X, POS_Y, POS_Z, NEAR_PLANE, FAR_PLANE, FOV, SENSITIVITY };
 
@@ -50,7 +50,7 @@ private:
     CameraManager cameraManager;
     ModelManager modelManager;
     RenderManager renderManager;
-    SceneContainer sceneContainer;
+    Scene sceneContainer;
     std::vector<Vector3D<double>> shadowDir;
     std::vector<Vector3D<double>> shadowUp;
     std::vector<Vector3D<double>> shadowRight;

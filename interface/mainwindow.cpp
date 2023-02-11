@@ -299,7 +299,7 @@ void MainWindow::on_lightZSpinBox_editingFinished()
 void MainWindow::on_createSceneButton1_clicked()
 {
     renderWidget->deleteAllModels();
-    ui->createButton->setEnabled(false);
+    //ui->createButton->setEnabled(false);
     ModelAttributes attributes;
     Material material;
     attributes.lengthTop = 0;
@@ -321,12 +321,12 @@ void MainWindow::on_createSceneButton1_clicked()
     material.diffuse_ = Color(color.redF(), color.greenF(), color.blueF());
     renderWidget->addModel(attributes, material);
     attributes.lengthTop = 70;
-    attributes.lengthBot = 120;
+    attributes.lengthBot = 10;
     attributes.height = 180;
-    attributes.nVerts = 40;
+    attributes.nVerts = 10;
     material.shininess_ = 512;
     material.specular_ = Color(1.0f, 1.0f, 1.0f);
-    color = QColor(173, 0, 255);
+    color = QColor(0, 0, 255);
     material.diffuse_ = Color(color.redF(), color.greenF(), color.blueF());
     renderWidget->addModel(attributes, material);
     renderWidget->setModel(2);
@@ -361,7 +361,7 @@ void MainWindow::on_createSceneButton1_clicked()
 void MainWindow::on_createSceneButton2_clicked()
 {
     renderWidget->deleteAllModels();
-    ui->createButton->setEnabled(false);
+    //ui->createButton->setEnabled(false);
     ModelAttributes attributes;
     Material material;
     attributes.lengthTop = 100;
@@ -426,7 +426,7 @@ void MainWindow::on_createSceneButton2_clicked()
 void MainWindow::on_createSceneButton3_clicked()
 {
     renderWidget->deleteAllModels();
-    ui->createButton->setEnabled(false);
+    //ui->createButton->setEnabled(false);
     ModelAttributes attributes;
     Material material;
     attributes.lengthTop = 0;

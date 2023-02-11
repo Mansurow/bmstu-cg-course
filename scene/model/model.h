@@ -3,11 +3,11 @@
 
 #include "scene/model/basemodel.h"
 
-class Cube: public BaseModel
+class Model: public BaseModel
 {
 public:
-    Cube();
-    Cube(const ModelAttributes &attributes, const Material &material);
+    Model();
+    Model(const ModelAttributes &attributes, const Material &material);
     void changeVerticesCount(const int &nVerts) override;
     void changeTopLength(const double &length) override;
     void changeBotLength(const double &length) override;

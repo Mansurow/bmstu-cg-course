@@ -8,7 +8,7 @@
 #include "scene/light/light.h"
 #include "scene/render/sceneshader.h"
 #include "scene/render/lightshader.h"
-#include "scene/render/shadowcube.h"
+#include "scene/render/shadowmodel.h"
 
 struct ThreadParams
 {
@@ -30,7 +30,7 @@ public:
     void renderCoordinateSystem(const Matrix<double> &rotation);
     inline int getIndexByPosition(const int &x, const int &y) const { return static_cast<int>(objectsBuffer[y][x]); }
     void clearFrame();
-    inline void clearShadow() { shadowCube.clear(); }
+    inline void clearShadow() { shadowModel.clear(); }
 private:
     void renderTriangle(std::vector<Vector3D<double>> &triangle, const char &objectIndex, const BaseShader &shader);
     void renderShadowTriangle(std::vector<Vector3D<double>> &triangle, const int &bufferIndex, const SceneShader &shader);
@@ -42,7 +42,7 @@ private:
     std::vector<std::vector<double>> depthBuffer;
     std::vector<std::vector<char>> objectsBuffer;
     QImage *frameBuffer;
-    ShadowCube shadowCube;
+    ShadowModel shadowModel;
 };
 
 #endif // RENDERMANAGER_H

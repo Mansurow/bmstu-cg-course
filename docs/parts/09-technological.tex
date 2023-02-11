@@ -16,15 +16,136 @@
 Данная среда поставляется с фреймворком Qt~\cite{qt-framefork}, который содержит в себе все необходимые средства, позволяющие работать непосредственно с пикселями изображения.
 Для упрощения сборки проекта программного обеспечения использовалась утилита qmake~\cite{qmake}.
 
-\subsection{Сведения о модулях программы}
+\subsection{Структура программы}
 
-\subsection{Реализация алгоритмов}
+На рисунке~\ref{fig:struct} представлена схема разработанных классов
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.9\textwidth]{img/algorithms/struct.png}
+	\caption{Схема классов программы}
+	\label{fig:struct}
+\end{figure}
+
+Разработанная программа состоит из следующих классов.
+\begin{itemize}
+	\item Базовые математические классы:
+	\begin{itemize}
+		\item Matrix --- класс матриц;
+		\item Vector3D --- класс векторов трехмерного пространства;
+		\item Vector4D --- класс векторов в однородных координатах.
+	\end{itemize}
+	\item Классы для работы с моделями
+	\begin{itemize}
+		\item BaseModel --- базовый класс моделей с возможностью перемещения по сцене и изменения спектральных характеристик;
+		\item Model --- класс модели с параметрами радиус верхнего и нижнего оснований, высота и число боковых граней, которые можно меняться.
+	\end{itemize}
+	\item Вспомогательные классы сцены
+	\begin{itemize}
+		\item Camera --- класс камеры с возможностью перемещения по сцене;
+		\item Light --- класс источника освещения с возможностью перемещения по сцене и изменения цвета.
+	\end{itemize}
+	\item Классы рейдеров
+	\begin{itemize}
+		\item BaseShader --- базовый класс шейдера для преобразования вершин и вычисления интенсивности пикселей;
+		\item SceneShader --- класс шейдера для визуализации сцены;
+		\item LightShader --- класс шейдера для визуализации источника освещения.
+	\end{itemize}
+	\item Классы управления сценой
+	\begin{itemize}
+		\item ModelManager --- класс для осуществления аффинных преобразований;
+		\item CameraManager --- класс для осуществления видовых и перспективных преобразований;
+		\item RenderManager --- класс для визуализации сцены;
+		\item Scene – класс управления объектами сцены.
+	\end{itemize}
+	\item Классы интерфейса
+	\begin{itemize}
+		\item Controller --- класс для взаимодействия управляющих классов с классами интерфейса;
+		\item RenderWidget --- класс виджета сцены для вывода буфера кадра;
+		\item MainWindow --- класс главного окна сцены.
+	\end{itemize}
+\end{itemize}
+
+%\subsection{Реализация алгоритмов}
 
 %В листингах \ref{lst:tf_alg} -- \ref{lst:multy_tf_alg} приведены реализации алгоритма выделения наиболее информативных терминов для каждого документа.
 
-%\lstinputlisting[label=lst:multy_tf_alg,caption=Функция работы основного потока запускающего вспомогательные потоки, firstline=33,lastline=59]{../src/pthread_tf.c}
+%\lstinputlisting[label=lst:rotate,caption=Реализация алгоритмов афинного преобразования --- поворота модели, firstline=8,lastline=42]{../scene/model/modelmanager.cpp}
+
+%\lstinputlisting[label=lst:move,caption=Реализация алгоритмов афинного преобразования --- перемещение модели, firstline=824,lastline=32]{../scene/model/modelmanager.h}
 
 \subsection{Интерфейс программного обеспечения}
+
+При запуске программы на виджете сцены отображается источник освещения и система координат в левом нижнем углу. Источник освещения отображается как пирамида цвета источника.
+Для операциям над объектами в левой части интерфейса определены разделы (создания и изменения объекта) и для управления камерой или освещением используются разделы в правой части экрана (рисунок~\ref{fig:example}).
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.95\textwidth]{img/examples/example.png}
+	\caption{Интерфейс программы}
+	\label{fig:example}
+\end{figure}
+
+Для создания модели пользователю необходимо ввести в разделе <<Создание модели>> ее геометрические и спектральные характеристики: радиусы верхнего и нижнего оснований, высоту, число боковых сторон, цвет поверхности, коэффициент блеска и зеркальный коэффициент, раздел показан на рисунке~\ref{fig:create}.
+
+\clearpage
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.3\textwidth]{img/examples/create.png}
+	\caption{Раздел создание модели}
+	\label{fig:create}
+\end{figure}
+
+При нажатии правой кнопкой мыши по модели на виджете сцены в разделе <<Создание модели>>s отобразится секция с редактированием модели, раздел показан на рисунке~\ref{fig:change-model}. 
+Для возврата в секцию создания необходимо нажать правой кнопкой мыши по пустой части виджета сцены.
+
+Для перемещения по сцене используются клавиши: W – вперед, S – назад, A – влево, D – вправо. Для поворота камеры необходимо зажать левую кнопку мыши и переместить мышь.
+
+\clearpage
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.3\textwidth]{img/examples/change-model.png}
+	\caption{Раздел редактирование модели}
+	\label{fig:change-model}
+\end{figure}
+
+В разделе <<Камер>> находятся следующие параметры: расстояния до ближней и дальней плоскостей пирамиды видимости, угол обзора, позиция камеры в пространстве, углы поворота, скорость перемещения и чувствительность мыши (рисунок~\ref{fig:camera}).
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.27\textwidth]{img/examples/camera.png}
+	\caption{Раздел камеры}
+	\label{fig:camera}
+\end{figure}
+
+Раздел “Освещение” содержит положение и цвет источника освещения (рисунок~\ref{fig:light}). 
+При выборе цвета появляется диалоговое окно с палитрой цветов (рисунок~\ref{fig:сhoose-color}).
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.5\textwidth]{img/examples/light.png}
+	\caption{Раздел освещения}
+	\label{fig:light}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.5\textwidth]{img/examples/choose-color.png}
+	\caption{Окно выбора цвета}
+	\label{fig:сhoose-color}
+\end{figure}
+
+\clearpage
+
+На рисунке~\ref{fig:example_work} приведен пример работы программы.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.95\textwidth]{img/examples/example-models.png}
+	\caption{Тестовая сцена}
+	\label{fig:example_work}
+\end{figure}
 
 \subsection*{Вывод}
 

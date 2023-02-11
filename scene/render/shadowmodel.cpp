@@ -1,11 +1,11 @@
-#include "shadowcube.h"
+#include "shadowmodel.h"
 #include <QtDebug>
 
-ShadowCube::ShadowCube()
+ShadowModel::ShadowModel()
 {
 }
 
-ShadowCube::ShadowCube(const int &width, const int &height)
+ShadowModel::ShadowModel(const int &width, const int &height)
      :bufferWidth(width),
       bufferHeight(height)
 {
@@ -15,7 +15,7 @@ ShadowCube::ShadowCube(const int &width, const int &height)
     }
 }
 
-double ShadowCube::getDepthByVector(const Vector3D<double> &vec) const
+double ShadowModel::getDepthByVector(const Vector3D<double> &vec) const
 {
     double absX = fabs(vec.x());
     double absY = fabs(vec.y());
@@ -96,7 +96,7 @@ double ShadowCube::getDepthByVector(const Vector3D<double> &vec) const
     return shadowBuffers[index][vi][ui];
 }
 
-void ShadowCube::clear()
+void ShadowModel::clear()
 {
     for (int i = 0; i < 6; i++)
     {

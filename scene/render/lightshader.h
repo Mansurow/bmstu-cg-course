@@ -17,7 +17,7 @@ public:
     inline Matrix<double> getVPMatrix() const { return vpMatrix_; }
     int vertex(std::vector<Vector4D<double>> &result, const std::vector<Vector3D<double>> &triangle, const Vector3D<double> &normal) override;
     inline void geometry(const std::vector<Vector4D<double>> &triangle) override {}
-    inline Color fragment(const Vector3D<double> &barycentric, const ShadowCube &shadowCube) const override { return lightColor_; }
+    inline Color fragment(const Vector3D<double> &barycentric, const ShadowModel &shadowCube) const override { return lightColor_; }
     ~LightShader() override {}
 private:
     inline bool pointIsVisible(const Vector4D<double> &plane, const Vector4D<double> &point) const { return (plane * point) > -EPS; }

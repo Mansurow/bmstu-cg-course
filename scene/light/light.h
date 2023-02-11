@@ -19,12 +19,12 @@ public:
     void setPosition(const Vector3D<double> &position);
     inline void setColor(const Color &color) { color_ = color; }
     inline Color getColor() const { return color_; }
-    inline Cube getModel() const { return  model_; }
+    inline Model getModel() const { return  model_; }
     inline Vector3D<double> getPosition() const { return position_; }
 private:
     Vector3D<double> position_;
     Color color_;
-    Cube model_;
+    Model model_;
 };
 
 #endif // LIGHT_H

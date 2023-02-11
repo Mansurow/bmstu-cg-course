@@ -31,7 +31,7 @@ SOURCES += \
     scene/render/lightshader.cpp \
     scene/render/rendermanager.cpp \
     scene/render/sceneshader.cpp \
-    scene/render/shadowcube.cpp
+    scene/render/shadowmodel.cpp
 
 HEADERS += \
     color/color.h \
@@ -54,8 +54,8 @@ HEADERS += \
     scene/render/lightshader.h \
     scene/render/rendermanager.h \
     scene/render/sceneshader.h \
-    scene/render/shadowcube.h \
-    scene/scenecontainer.h
+    scene/render/shadowmodel.h \
+    scene/scene.h
 
 FORMS += \
     interface/mainwindow.ui

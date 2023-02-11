@@ -1,11 +1,11 @@
 #include "model.h"
 #include "model.h"
 
-Cube::Cube()
+Model::Model()
 {
 }
 
-Cube::Cube(const ModelAttributes &attributes, const Material &material)
+Model::Model(const ModelAttributes &attributes, const Material &material)
 {
     computeVertices(attributes);
     computeTriangles(attributes.nVerts);
@@ -13,7 +13,7 @@ Cube::Cube(const ModelAttributes &attributes, const Material &material)
     material_ = material;
 }
 
-void Cube::changeVerticesCount(const int &nVerts)
+void Model::changeVerticesCount(const int &nVerts)
 {
     ModelAttributes attributes;
     attributes.lengthBot = vertices_[0].x();
@@ -28,7 +28,7 @@ void Cube::changeVerticesCount(const int &nVerts)
     computeNormals(nVerts);
 }
 
-void Cube::changeTopLength(const double &length)
+void Model::changeTopLength(const double &length)
 {
     int verts = countVertices();
     double d_angle = 4 * M_PI / verts;
@@ -43,7 +43,7 @@ void Cube::changeTopLength(const double &length)
     computeNormals(countVertices()/2);
 }
 
-void Cube::changeBotLength(const double &length)
+void Model::changeBotLength(const double &length)
 {
     int verts = countVertices() / 2;
     double d_angle = 2 * M_PI / verts;
@@ -58,7 +58,7 @@ void Cube::changeBotLength(const double &length)
     computeNormals(countVertices()/2);
 }
 
-void Cube::changeHeight(const double &height)
+void Model::changeHeight(const double &height)
 {
     int verts = countVertices() / 2;
     double half_height = height / 2;
@@ -71,7 +71,7 @@ void Cube::changeHeight(const double &height)
     computeNormals(countVertices()/2);
 }
 
-ModelAttributes Cube::getAttributes() const
+ModelAttributes Model::getAttributes() const
 {
     int verts = countVertices() / 2;
     ModelAttributes attributes;
@@ -82,7 +82,7 @@ ModelAttributes Cube::getAttributes() const
     return attributes;
 }
 
-void Cube::computeVertices(const ModelAttributes &attributes)
+void Model::computeVertices(const ModelAttributes &attributes)
 {
     double d_angle = 2 * M_PI / attributes.nVerts;
     double angle = 0;
@@ -100,7 +100,7 @@ void Cube::computeVertices(const ModelAttributes &attributes)
     }
 }
 
-void Cube::computeTriangles(const int &nVerts)
+void Model::computeTriangles(const int &nVerts)
 {
     for (int i = 0; i < nVerts - 2; i++)
     {
@@ -128,7 +128,7 @@ void Cube::computeTriangles(const int &nVerts)
     }
 }
 
-void Cube::computeNormals(const int &nVerts)
+void Model::computeNormals(const int &nVerts)
 {
     Vector3D<double> normal;
     for (int i = 0; i < nVerts - 2; i++)

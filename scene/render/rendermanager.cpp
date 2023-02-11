@@ -10,13 +10,14 @@ RenderManager::RenderManager(QImage *frame, const int &sc_width, const int &sc_h
     : screenWidth(sc_width),
       screenHeight(sc_height),
       frameBuffer(frame),
-      shadowCube(1024, 1024)
+      shadowModel(1024, 1024)
 {
     depthBuffer = std::vector<std::vector<double>> (screenHeight, std::vector<double>(screenWidth, 2));
     objectsBuffer = std::vector<std::vector<char>> (screenHeight, std::vector<char>(screenWidth, -1));
     frameBuffer->fill(Qt::black);
 }
 
+// отрисовка модели
 void RenderManager::renderModel(BaseShader &shader, const BaseModel &model, const int &index)
 {
     char objectIndex = index;
@@ -38,6 +39,7 @@ void RenderManager::renderModel(BaseShader &shader, const BaseModel &model, cons
     }
 }
 
+// отрисовка теней модели
 void RenderManager::renderShadowModel(SceneShader &shader, const BaseModel &model, const int &bufferIndex)
 {
     std::vector<Vector3D<double>> triangle(3);
@@ -58,6 +60,7 @@ void RenderManager::renderShadowModel(SceneShader &shader, const BaseModel &mode
     }
 }
 
+// отрисовка координатной оси и ее поворот
 void RenderManager::renderCoordinateSystem(const Matrix<double> &rotation)
 {
     std::vector<Vector3D<double>> system {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}};
@@ -89,7 +92,7 @@ void RenderManager::renderCoordinateSystem(const Matrix<double> &rotation)
     QFont font = painter.font();
     font.setPixelSize(18);
     painter.setFont(font);
-    QPoint center(110, screenHeight - 70);
+    QPoint center(110, screenHeight - 50);
     for (int i = 2; i >= 0; i--)
     {
         painter.setPen(QPen(colors[i], 5));
@@ -148,7 +151,7 @@ void RenderManager::renderShadowTriangle(std::vector<Vector3D<double> > &triangl
 {
     for (auto &point: triangle)
     {
-        viewPort(point, shadowCube.getWidth(), shadowCube.getHeight());
+        viewPort(point, shadowModel.getWidth(), shadowModel.getHeight());
         point.setZ(1 / point.z());
     }
     QPoint leftCorner(std::numeric_limits<int>::max(), std::numeric_limits<int>::max());
@@ -160,8 +163,8 @@ void RenderManager::renderShadowTriangle(std::vector<Vector3D<double> > &triangl
         leftCorner.setX(std::min(leftCorner.x(), static_cast<int>(point.x())));
         leftCorner.setY(std::min(leftCorner.y(), static_cast<int>(point.y())));
     }
-    rightCorner.setX(std::min(rightCorner.x(), shadowCube.getWidth() - 1));
-    rightCorner.setY(std::min(rightCorner.y(), shadowCube.getHeight() - 1));
+    rightCorner.setX(std::min(rightCorner.x(), shadowModel.getWidth() - 1));
+    rightCorner.setY(std::min(rightCorner.y(), shadowModel.getHeight() - 1));
     double square = (triangle[0].y() - triangle[2].y()) * (triangle[1].x() - triangle[2].x()) +
             (triangle[1].y() - triangle[2].y()) * (triangle[2].x() - triangle[0].x());
     Vector3D<double> barCoords;
@@ -174,15 +177,16 @@ void RenderManager::renderShadowTriangle(std::vector<Vector3D<double> > &triangl
             if (barCoords.x() >= -EPS && barCoords.y() >= -EPS && barCoords.z() >= -EPS)
             {
                 z = shader.countShadowDepth(barCoords);
-                if (z <= shadowCube.getDepthByIndex(bufferIndex, i, j))
+                if (z <= shadowModel.getDepthByIndex(bufferIndex, i, j))
                 {
-                    shadowCube.setPixel(bufferIndex, i, j, z);
+                    shadowModel.setPixel(bufferIndex, i, j, z);
                 }
             }
         }
     }
 }
 
+// отрисовка буфер кадра
 void RenderManager::renderFrameBuffer(ThreadParams params, const std::vector<Vector3D<double> > &triangle, const char &objectIndex, const BaseShader &shader, const double &square)
 {
     Vector3D<double> barCoords;
@@ -200,7 +204,7 @@ void RenderManager::renderFrameBuffer(ThreadParams params, const std::vector<Vec
                 {
                     depthBuffer[j][i] = z;
                     objectsBuffer[j][i] = objectIndex;
-                    color = shader.fragment(barCoords, shadowCube);
+                    color = shader.fragment(barCoords, shadowModel);
                     frameBuffer->setPixel(i, j, color.rgb());
                 }
             }
@@ -215,6 +219,7 @@ void RenderManager::viewPort(Vector3D<double> &point, const int &width, const in
     point.setZ((point.z() + 2) * 0.5);
 }
 
+//
 void RenderManager::barycentric(Vector3D<double> &barCoords, const std::vector<Vector3D<double>> &triangle, const QPoint &P, const double &square)
 {
     barCoords.setX(((P.y() - triangle[2].y()) * (triangle[1].x() - triangle[2].x()) + (triangle[1].y() - triangle[2].y()) * (triangle[2].x() - P.x())) / square);

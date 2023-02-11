@@ -21,12 +21,18 @@ public:
     void rotateByX(BaseModel &model, const double &angle) const;
     void rotateByY(BaseModel &model, const double &angle) const;
     void rotateByZ(BaseModel &model, const double &angle) const;
-    inline void translateByX(BaseModel &model, const double &translation) const { model.setTranslation(model.getTranslation() + Vector3D<double>(translation, 0, 0)); }
-    inline void translateByY(BaseModel &model, const double &translation) const { model.setTranslation(model.getTranslation() + Vector3D<double>(0, translation, 0)); }
-    inline void translateByZ(BaseModel &model, const double &translation) const { model.setTranslation(model.getTranslation() + Vector3D<double>(0, 0, translation)); }
+    inline void translateByX(BaseModel &model, const double &translation) const {
+        model.setTranslation(model.getTranslation() + Vector3D<double>(translation, 0, 0));
+    }
+    inline void translateByY(BaseModel &model, const double &translation) const {
+        model.setTranslation(model.getTranslation() + Vector3D<double>(0, translation, 0));
+    }
+    inline void translateByZ(BaseModel &model, const double &translation) const {
+        model.setTranslation(model.getTranslation() + Vector3D<double>(0, 0, translation));
+    }
     Matrix<double> getModelView(const BaseModel &model) const;
 private:
-    std::vector<Cube> models;
+    std::vector<Model> models;
 };
 
 #endif // MODELMANAGER_H

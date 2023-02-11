@@ -82,7 +82,7 @@ void SceneShader::geometry(const std::vector<Vector4D<double>> &triangle)
     }
 }
 
-Color SceneShader::fragment(const Vector3D<double> &barycentric, const ShadowCube &shadowCube) const
+Color SceneShader::fragment(const Vector3D<double> &barycentric, const ShadowModel &shadowCube) const
 {
     Vector3D<double> bar(barycentric);
     bar.setX(bar.x() * w_[0]);

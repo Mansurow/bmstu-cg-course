@@ -59,7 +59,7 @@ void Controller::changeLight(const LightTransformation &transformation)
 
 int Controller::addModel(const ModelAttributes &attributes, const Material &material)
 {
-    Cube model(attributes, material);
+    Model model(attributes, material);
     sceneContainer.addModel(model);
     renderShadow();
     renderScene();
@@ -68,13 +68,13 @@ int Controller::addModel(const ModelAttributes &attributes, const Material &mate
 
 ModelAttributes Controller::getModelAttributes(const int &index)
 {
-    const Cube &model = sceneContainer.getModel(index);
+    const Model &model = sceneContainer.getModel(index);
     return model.getAttributes();
 }
 
 Material Controller::getModelMaterial(const int &index)
 {
-    const Cube &model = sceneContainer.getModel(index);
+    const Model &model = sceneContainer.getModel(index);
     return model.getMaterial();
 }
 
@@ -87,7 +87,7 @@ void Controller::deleteModel(const int &index)
 
 void Controller::changeModel(const ModelTransformation &transformation, const int &index)
 {
-    Cube &model = sceneContainer.getModel(index);
+    Model &model = sceneContainer.getModel(index);
     if (std::holds_alternative<ModelMovement>(transformation))
     {
         ModelMovement movement = std::get<ModelMovement>(transformation);
@@ -259,7 +259,7 @@ void Controller::renderScene()
     Matrix<double> vpMatrix = cameraManager.getLookAt(camera) * cameraManager.getProjection(camera);
     Matrix<double> modelMatrix(4, 4);
     SceneShader sceneShader;
-    Cube model;
+    Model model;
     sceneShader.setCameraPosition(camera.getPosition());
     sceneShader.setLightPosition(light.getPosition());
     sceneShader.setVpMatrix(vpMatrix);
@@ -305,7 +305,7 @@ void Controller::renderShadow()
         shader.setVpMatrix(vpMatrix);
         for (int i = 0; i < sceneContainer.countModels(); i++)
         {
-            Cube model = sceneContainer.getModel(i);
+            Model model = sceneContainer.getModel(i);
             modelMatrix = modelManager.getModelView(model);
             shader.setModelMatrix(modelMatrix);
             renderManager.renderShadowModel(shader, model, j);
