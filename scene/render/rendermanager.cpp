@@ -120,12 +120,12 @@ void RenderManager::renderTriangle(std::vector<Vector3D<double>> &triangle, cons
     for (const auto &point: triangle)
     {
         rightCorner.setX(std::max(rightCorner.x(), static_cast<int>(point.x())));
-        rightCorner.setY(std::max(rightCorner.y(),static_cast<int>(point.y())));
+        rightCorner.setY(std::max(rightCorner.y(), static_cast<int>(point.y())));
         leftCorner.setX(std::min(leftCorner.x(), static_cast<int>(point.x())));
         leftCorner.setY(std::min(leftCorner.y(), static_cast<int>(point.y())));
     }
     rightCorner.setX(std::min(rightCorner.x(), screenWidth - 1));
-    rightCorner.setY(std::min(rightCorner.y(),screenHeight - 1));
+    rightCorner.setY(std::min(rightCorner.y(), screenHeight - 1));
     double square = (triangle[0].y() - triangle[2].y()) * (triangle[1].x() - triangle[2].x()) +
             (triangle[1].y() - triangle[2].y()) * (triangle[2].x() - triangle[0].x());
     std::vector<std::thread> threads(8);
@@ -159,7 +159,7 @@ void RenderManager::renderShadowTriangle(std::vector<Vector3D<double> > &triangl
     for (const auto &point: triangle)
     {
         rightCorner.setX(std::max(rightCorner.x(), static_cast<int>(point.x())));
-        rightCorner.setY(std::max(rightCorner.y(),static_cast<int>(point.y())));
+        rightCorner.setY(std::max(rightCorner.y(), static_cast<int>(point.y())));
         leftCorner.setX(std::min(leftCorner.x(), static_cast<int>(point.x())));
         leftCorner.setY(std::min(leftCorner.y(), static_cast<int>(point.y())));
     }
@@ -186,7 +186,7 @@ void RenderManager::renderShadowTriangle(std::vector<Vector3D<double> > &triangl
     }
 }
 
-// отрисовка буфер кадра
+// отрисовка буфер кадра - алгоритм с z-буфером (многопоточная)
 void RenderManager::renderFrameBuffer(ThreadParams params, const std::vector<Vector3D<double> > &triangle, const char &objectIndex, const BaseShader &shader, const double &square)
 {
     Vector3D<double> barCoords;

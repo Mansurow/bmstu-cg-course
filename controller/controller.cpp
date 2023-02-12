@@ -34,15 +34,15 @@ Controller::Controller(QImage *frame, const int &screen_width, const int &screen
     renderManager = RenderManager(frame, screen_width, screen_height);
     cameraManager = CameraManager(2, 0.25);
     Camera camera(cameraAttributes);
-    sceneContainer.setCamera(camera);
+    scene.setCamera(camera);
     Light light(lightAttributes);
-    sceneContainer.setLight(light);
+    scene.setLight(light);
     renderScene();
 }
 
 void Controller::changeLight(const LightTransformation &transformation)
 {
-    Light &light = sceneContainer.getLight();
+    Light &light = scene.getLight();
     if (std::holds_alternative<Vector3D<double>>(transformation))
     {
         Vector3D<double> position = std::get<Vector3D<double>>(transformation);
@@ -60,34 +60,34 @@ void Controller::changeLight(const LightTransformation &transformation)
 int Controller::addModel(const ModelAttributes &attributes, const Material &material)
 {
     Model model(attributes, material);
-    sceneContainer.addModel(model);
+    scene.addModel(model);
     renderShadow();
     renderScene();
-    return sceneContainer.countModels();
+    return scene.countModels();
 }
 
 ModelAttributes Controller::getModelAttributes(const int &index)
 {
-    const Model &model = sceneContainer.getModel(index);
+    const Model &model = scene.getModel(index);
     return model.getAttributes();
 }
 
 Material Controller::getModelMaterial(const int &index)
 {
-    const Model &model = sceneContainer.getModel(index);
+    const Model &model = scene.getModel(index);
     return model.getMaterial();
 }
 
 void Controller::deleteModel(const int &index)
 {
-    sceneContainer.deleteModel(index);
+    scene.deleteModel(index);
     renderShadow();
     renderScene();
 }
 
 void Controller::changeModel(const ModelTransformation &transformation, const int &index)
 {
-    Model &model = sceneContainer.getModel(index);
+    Model &model = scene.getModel(index);
     if (std::holds_alternative<ModelMovement>(transformation))
     {
         ModelMovement movement = std::get<ModelMovement>(transformation);
@@ -149,32 +149,32 @@ void Controller::changeModel(const ModelTransformation &transformation, const in
 
 double Controller::getYaw()
 {
-    Camera &camera = sceneContainer.getCamera();
+    Camera &camera = scene.getCamera();
     return camera.getYaw();
 }
 
 double Controller::getPitch()
 {
-    Camera &camera = sceneContainer.getCamera();
+    Camera &camera = scene.getCamera();
     return camera.getPitch();
 }
 
 Vector3D<double> Controller::getCameraPos()
 {
-    Camera &camera = sceneContainer.getCamera();
+    Camera &camera = scene.getCamera();
     return camera.getPosition();
 }
 
 void Controller::deleteAllModels()
 {
-    sceneContainer.deleteAllModels();
+    scene.deleteAllModels();
     renderShadow();
     renderScene();
 }
 
 void Controller::changeCamera(const CameraTransformation &transformation)
 {
-    Camera &camera = sceneContainer.getCamera();
+    Camera &camera = scene.getCamera();
     if (std::holds_alternative<CameraMovement>(transformation))
     {
         CameraMovement movement = std::get<CameraMovement>(transformation);
@@ -252,8 +252,8 @@ void Controller::changeCamera(const CameraTransformation &transformation)
 
 void Controller::renderScene()
 {
-    Camera camera = sceneContainer.getCamera();
-    Light light = sceneContainer.getLight();
+    Camera camera = scene.getCamera();
+    Light light = scene.getLight();
     renderManager.clearFrame();
     Matrix<double> rotation = cameraManager.getRotation(camera);
     Matrix<double> vpMatrix = cameraManager.getLookAt(camera) * cameraManager.getProjection(camera);
@@ -263,9 +263,9 @@ void Controller::renderScene()
     sceneShader.setCameraPosition(camera.getPosition());
     sceneShader.setLightPosition(light.getPosition());
     sceneShader.setVpMatrix(vpMatrix);
-    for (int i = 0; i < sceneContainer.countModels(); i++)
+    for (int i = 0; i < scene.countModels(); i++)
     {
-        model = sceneContainer.getModel(i);
+        model = scene.getModel(i);
         modelMatrix = modelManager.getModelView(model);
         sceneShader.setModelMatrix(modelMatrix);
         sceneShader.setMaterial(model.getMaterial());
@@ -286,7 +286,7 @@ void Controller::renderScene()
 void Controller::renderShadow()
 {
     Camera camera;
-    Light light = sceneContainer.getLight();
+    Light light = scene.getLight();
     camera.setViewFrustrum({90, 0.1, 1000, 1});
     renderManager.clearShadow();
     Matrix<double> projection = cameraManager.getProjection(camera);
@@ -303,13 +303,12 @@ void Controller::renderShadow()
         camera.setRight(shadowRight[j]);
         vpMatrix = cameraManager.getLookAt(camera) * projection;
         shader.setVpMatrix(vpMatrix);
-        for (int i = 0; i < sceneContainer.countModels(); i++)
+        for (int i = 0; i < scene.countModels(); i++)
         {
-            Model model = sceneContainer.getModel(i);
+            Model model = scene.getModel(i);
             modelMatrix = modelManager.getModelView(model);
             shader.setModelMatrix(modelMatrix);
             renderManager.renderShadowModel(shader, model, j);
         }
     }
-
 }

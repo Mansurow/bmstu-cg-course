@@ -39,9 +39,9 @@ private:
     void viewPort(Vector3D<double> &point, const int &wdith, const int &height);
     int screenWidth;
     int screenHeight;
-    std::vector<std::vector<double>> depthBuffer;
+    std::vector<std::vector<double>> depthBuffer; // z-буфер
     std::vector<std::vector<char>> objectsBuffer;
-    QImage *frameBuffer;
+    QImage *frameBuffer; // буфер-кадра
     ShadowModel shadowModel;
 };
 

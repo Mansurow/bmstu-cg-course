@@ -89,16 +89,14 @@ Matrix<double> CameraManager::getRotation(const Camera &camera) const
     return rotate;
 }
 
-Matrix<double> CameraManager::getProjection(const Camera &camera) const
-{
+Matrix<double> CameraManager::getProjection(const Camera &camera) const {
     ViewFrustrum frustrum = camera.getViewFrustrum();
     Matrix<double> projection(4,4);
     projection[1][1] = 1 / tan(radians(frustrum.field_of_view / 2));
-    projection[0][0] = projection[1][1] /frustrum. aspect_ratio;
+    projection[0][0] = projection[1][1] /frustrum.aspect_ratio;
     projection[2][2] = (frustrum.far_plane + frustrum.near_plane) / (frustrum.far_plane - frustrum.near_plane);
     projection[3][2] = -2 * frustrum.near_plane * frustrum.far_plane / (frustrum.far_plane - frustrum.near_plane);
     projection[2][3] = 1;
-
     return projection;
 }
 

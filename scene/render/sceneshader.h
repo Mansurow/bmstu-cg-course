@@ -26,7 +26,7 @@ public:
     inline Matrix<double> getVPMatrix() const { return vpMatrix_; }
     int vertex(std::vector<Vector4D<double>> &result, const std::vector<Vector3D<double>> &triangle, const Vector3D<double> &normal) override;
     void geometry(const std::vector<Vector4D<double>> &triangle) override;
-    Color fragment(const Vector3D<double> &barycentric, const ShadowModel &shadowCube) const override;
+    Color fragment(const Vector3D<double> &barycentric, const ShadowModel &shadowModel) const override;
     double countShadowDepth(Vector3D<double> &barycentric) const;
     ~SceneShader() override {}
 private:

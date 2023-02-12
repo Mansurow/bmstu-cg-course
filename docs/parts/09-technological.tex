@@ -18,7 +18,7 @@
 
 \subsection{Структура программы}
 
-На рисунке~\ref{fig:struct} представлена схема разработанных классов
+На рисунке~\ref{fig:struct} представлена схема разработанных классов.
 
 \begin{figure}[h]
 	\centering
@@ -66,13 +66,86 @@
 	\end{itemize}
 \end{itemize}
 
-%\subsection{Реализация алгоритмов}
+\subsection{Реализация алгоритмов}
 
-%В листингах \ref{lst:tf_alg} -- \ref{lst:multy_tf_alg} приведены реализации алгоритма выделения наиболее информативных терминов для каждого документа.
+На листингах \ref{lst:render-scene} -- \ref{lst:z-buffer} приведена реализация алгоритма визуализации сцены по схеме алгоритма синтеза изображения, который показан на рисунке~\ref{fig:alg_scene}.
+В листинге \ref{lst:z-buffer} приведена многопоточная реализация алгоритм с Z-буфером.
 
-%\lstinputlisting[label=lst:rotate,caption=Реализация алгоритмов афинного преобразования --- поворота модели, firstline=8,lastline=42]{../scene/model/modelmanager.cpp}
+Основной поток создает вспомогательные потоки и разбивает растеризацию полигона между ними, данную реализацию можно рассмотреть на листингах~\ref{lst:render-triangle_1}--\ref{lst:render-triangle_2}.
+В качестве аргументов потоку передается:
+\begin{itemize}
+	\item startCol --- номер строки буфера для начало работы;
+	\item endCol --- номер строки буфера для конца работы потока;
+	\item startRow --- номер столбца буфера для начало работы потока в строках $[startCol;endCol)$;
+	\item endRow --- номер столбца буфера для конца работы потока в строках $[startCol;endCol)$;
+\end{itemize}
+По аргументам будет определен объем работы, выполняемый конкретным вспомогательным потоком.
 
-%\lstinputlisting[label=lst:move,caption=Реализация алгоритмов афинного преобразования --- перемещение модели, firstline=824,lastline=32]{../scene/model/modelmanager.h}
+На листингах \ref{lst:render-shadow} -- \ref{lst:render-shadow-triangle-2} представлена реализация алгоритма визуализации теней на сцене с использованием карты теней.
+
+На листингах \ref{lst:model-move} -- \ref{lst:model-rotate-1} представлены реализация поворота и перемещения модели. На листингах \ref{lst:camera-move} -- \ref{lst:camera-proj} представлены реализации движения и поворота камеры, вычисления перспективной проекции пространства камеры.
+
+\clearpage
+
+\lstinputlisting[label=lst:render-scene,caption=Реализация визуализации сцены, firstline=253,lastline=284]{../controller/controller.cpp}
+
+\clearpage
+
+\lstinputlisting[label=lst:render-model,caption=Реализация визуализации модели на сцене, firstline=21,lastline=40]{../scene/render/rendermanager.cpp}
+
+\clearpage
+
+\lstinputlisting[label=lst:render-triangle_1,caption=Реализация визуализации полигона модели на сцене (Часть 1), firstline=111,lastline=135]{../scene/render/rendermanager.cpp}
+
+\lstinputlisting[label=lst:render-triangle_2,caption=Реализация визуализации полигона модели на сцене (Часть 2), firstline=136,lastline=148]{../scene/render/rendermanager.cpp}
+
+\clearpage
+
+\lstinputlisting[label=lst:z-buffer,caption=Реализация алгоритма с z-буфером, firstline=190,lastline=213]{../scene/render/rendermanager.cpp}
+
+\clearpage
+
+\lstinputlisting[label=lst:render-shadow,caption=Реализация визуализации теней на сцене, firstline=286,lastline=314]{../controller/controller.cpp}
+
+\clearpage
+
+\lstinputlisting[label=lst:render-shadow-model,caption=Реализация визуализации теней для модели на сцене, firstline=43,lastline=61]{../scene/render/rendermanager.cpp}
+
+\clearpage
+
+\lstinputlisting[label=lst:render-shadow-triangle-1,caption=Реализация визуализации теней для полигона модели на сцене с использованием карты теней (Часть 1), firstline=150,lastline=169]{../scene/render/rendermanager.cpp}
+
+\lstinputlisting[label=lst:render-shadow-triangle-2,caption=Реализация визуализации теней для полигона модели на сцене с использованием карты теней (Часть 2), firstline=170,lastline=187]{../scene/render/rendermanager.cpp}
+
+\clearpage
+
+\lstinputlisting[label=lst:model-rotate-1,caption=Реализация афинного преобразования --- поворота модели (Часть 1), firstline=8,lastline=34]{../scene/model/modelmanager.cpp}
+
+\lstinputlisting[label=lst:model-rotate-2,caption=Реализация афинного преобразования --- поворота модели (Часть 2), firstline=35,lastline=42]{../scene/model/modelmanager.cpp}
+
+\begin{lstlisting}[label=lst:model-move,caption=Реализация афинного преобразования --- перемещение модели]
+inline void translateByX(BaseModel &model, const double &translation) const {
+	model.setTranslation(model.getTranslation() + Vector3D<double>(translation, 0, 0));
+}
+inline void translateByY(BaseModel &model, const double &translation) const {
+	model.setTranslation(model.getTranslation() + Vector3D<double>(0, translation, 0));
+}
+inline void translateByZ(BaseModel &model, const double &translation) const {
+	model.setTranslation(model.getTranslation() + Vector3D<double>(0, 0, translation));
+}
+\end{lstlisting}
+
+\clearpage
+
+\lstinputlisting[label=lst:camera-rotate,caption=Реализация поворота камеры, firstline=13,lastline=38]{../scene/camera/cameramanager.cpp}
+
+\clearpage
+
+\lstinputlisting[label=lst:camera-move,caption=Реализация движения камеры, firstline=40,lastline=54]{../scene/camera/cameramanager.cpp}
+
+\lstinputlisting[label=lst:camera-proj,caption=Реализация алгоритма вычисления перспективной проектции, firstline=92,lastline=103]{../scene/camera/cameramanager.cpp}
+
+\clearpage
 
 \subsection{Интерфейс программного обеспечения}
 
@@ -82,7 +155,7 @@
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.95\textwidth]{img/examples/example.png}
-	\caption{Интерфейс программы}
+	\caption{GUI}
 	\label{fig:example}
 \end{figure}
 
@@ -119,7 +192,7 @@
 	\label{fig:camera}
 \end{figure}
 
-Раздел “Освещение” содержит положение и цвет источника освещения (рисунок~\ref{fig:light}). 
+Раздел <<Освещение>> содержит положение и цвет источника освещения (рисунок~\ref{fig:light}). 
 При выборе цвета появляется диалоговое окно с палитрой цветов (рисунок~\ref{fig:сhoose-color}).
 
 \begin{figure}[h]

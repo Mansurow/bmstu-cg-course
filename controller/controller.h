@@ -50,7 +50,7 @@ private:
     CameraManager cameraManager;
     ModelManager modelManager;
     RenderManager renderManager;
-    Scene sceneContainer;
+    Scene scene;
     std::vector<Vector3D<double>> shadowDir;
     std::vector<Vector3D<double>> shadowUp;
     std::vector<Vector3D<double>> shadowRight;

@@ -18,7 +18,7 @@ public:
     inline int getHeight() { return bufferHeight; }
     void clear();
 private:
-    std::vector<std::vector<std::vector<double>>> shadowBuffers;
+    std::vector<std::vector<std::vector<double>>> shadowBuffers; // карты теней
     int bufferWidth;
     int bufferHeight;
 };

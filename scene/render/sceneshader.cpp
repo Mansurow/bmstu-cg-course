@@ -63,7 +63,7 @@ int SceneShader::vertex(std::vector<Vector4D<double>> &result, const std::vector
             clippedPolygon[i] = clippedPolygon[i] * mvpMatrix_;
         }
         count = 3;
-        for (int i = 0; i < planes_.size(); i++)
+        for (int i = 0; i < (int) planes_.size(); i++)
         {
             count = clipPolygon(result, clippedPolygon, planes_[i], count);
             if (count == 0) break;
@@ -82,7 +82,7 @@ void SceneShader::geometry(const std::vector<Vector4D<double>> &triangle)
     }
 }
 
-Color SceneShader::fragment(const Vector3D<double> &barycentric, const ShadowModel &shadowCube) const
+Color SceneShader::fragment(const Vector3D<double> &barycentric, const ShadowModel &shadowModel) const
 {
     Vector3D<double> bar(barycentric);
     bar.setX(bar.x() * w_[0]);
@@ -94,7 +94,7 @@ Color SceneShader::fragment(const Vector3D<double> &barycentric, const ShadowMod
     double ambient = 0.1;
 //    double depth = lightDir.module();
 //    qDebug() << depth << shadowCube.getDepthByVector(lightDir);
-    if (lightDir.module() - 5 < shadowCube.getDepthByVector(lightDir))
+    if (lightDir.module() - 5 < shadowModel.getDepthByVector(lightDir))
     {
         lightDir = lightDir * (-1);
         Vector3D<double> eyeDir(cameraPosition_ - position);
